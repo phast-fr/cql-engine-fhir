@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package fr.phast.cql.proxy.exception
+package fr.phast.cql.engine.fhir.exception
 
 import org.opencds.cqf.cql.engine.exception.CqlException
 

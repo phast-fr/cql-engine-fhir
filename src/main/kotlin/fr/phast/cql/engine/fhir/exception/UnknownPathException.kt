@@ -22,6 +22,6 @@
  * SOFTWARE.
  */
 
-package fr.phast.cql.proxy.exception
+package fr.phast.cql.engine.fhir.exception
 
 class UnknownPathException(message: String): DataProviderException(message)

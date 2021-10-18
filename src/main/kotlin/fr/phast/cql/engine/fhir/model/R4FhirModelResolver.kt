@@ -24,7 +24,7 @@
 
 package fr.phast.cql.engine.fhir.model
 
-import fr.phast.cql.proxy.exception.UnknownTypeException
+import fr.phast.cql.engine.fhir.exception.UnknownTypeException
 import org.opencds.cqf.cql.engine.runtime.Date
 import org.hl7.fhir.r4.model.*
 import org.opencds.cqf.cql.engine.model.ModelResolver
