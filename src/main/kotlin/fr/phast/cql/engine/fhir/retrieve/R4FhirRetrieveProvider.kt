@@ -81,10 +81,10 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
             val codings = mutableListOf<Coding>()
             codes.forEach { code ->
                 codings.add(Coding().also {
-                    it.code = CodeType(code.code)
-                    it.system = UriType(code.system)
-                    it.display = StringType(code.display)
-                    it.version = StringType(code.version)
+                    it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                    it.system = if (code.system != null) { UriType(code.system) } else { null }
+                    it.display = if (code.display != null) { StringType(code.display) } else { null }
+                    it.version = if (code.version != null) { StringType(code.version) } else { null }
                 })
             }
             val response = fhirClient
@@ -119,10 +119,10 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
             val codings = mutableListOf<Coding>()
             codes.forEach { code ->
                 codings.add(Coding().also {
-                    it.code = CodeType(code.code)
-                    it.system = UriType(code.system)
-                    it.display = StringType(code.display)
-                    it.version = StringType(code.version)
+                    it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                    it.system = if (code.system != null) { UriType(code.system) } else { null }
+                    it.display = if (code.display != null) { StringType(code.display) } else { null }
+                    it.version = if (code.version != null) { StringType(code.version) } else { null }
                 })
             }
             val response = fhirClient
@@ -160,10 +160,10 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
             val codings = mutableListOf<Coding>()
             terminologyProvider.expand(ValueSetInfo().withId(valueSet)).forEach { code ->
                 codings.add(Coding().also {
-                    it.code = CodeType(code.code)
-                    it.system = UriType(code.system)
-                    it.display = StringType(code.display)
-                    it.version = StringType(code.version)
+                    it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                    it.system = if (code.system != null) { UriType(code.system) } else { null }
+                    it.display = if (code.display != null) { StringType(code.display) } else { null }
+                    it.version = if (code.version != null) { StringType(code.version) } else { null }
                 })
             }
             val response = fhirClient
