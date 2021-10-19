@@ -101,7 +101,8 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "subject"
             && contextValue is StringType
             && dataType != null
-            && codes == null) {
+            && codes == null
+            && valueSet == null) {
             val response = fhirClient
                 .search()
                 .withResourceType(dataType)
@@ -139,6 +140,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "subject"
             && contextValue is StringType
             && dataType != null
+            && codes == null
             && valueSet != null
             && !isExpandValueSets) {
             val response = fhirClient
@@ -155,6 +157,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "subject"
             && contextValue is StringType
             && dataType != null
+            && codes == null
             && valueSet != null
             && isExpandValueSets) {
             val codings = mutableListOf<Coding>()
