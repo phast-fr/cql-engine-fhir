@@ -39,10 +39,18 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
 
     private var credential: String? = null
 
-    constructor(uri: String, credential: String) : this(uri) {
+    constructor(uri: String, log: Boolean): this(uri) {
+        fhirClient.log = log
+    }
+
+    constructor(uri: String, credential: String): this(uri) {
         this.credential = credential
         this.fhirClient.tokenType = "Bearer"
         this.fhirClient.credential = credential
+    }
+
+    constructor(uri: String, credential: String, log: Boolean): this(uri, credential) {
+        fhirClient.log = log
     }
 
     override fun retrieve(
@@ -78,20 +86,18 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
             && dataType == "MedicationRequest"
             && codePath == "medication.code"
             && codes != null) {
-            val codings = mutableListOf<Coding>()
-            codes.forEach { code ->
-                codings.add(Coding().also {
-                    it.code = if (code.code != null) { CodeType(code.code) } else { null }
-                    it.system = if (code.system != null) { UriType(code.system) } else { null }
-                    it.display = if (code.display != null) { StringType(code.display) } else { null }
-                    it.version = if (code.version != null) { StringType(code.version) } else { null }
-                })
-            }
             val response = fhirClient
                 .search()
                 .withResourceType(dataType)
                 .withSubject(contextValue.value)
-                .withMedicationCode(codings)
+                .withMedicationCode(codes.map { code ->
+                    Coding().also {
+                        it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                        it.system = if (code.system != null) { UriType(code.system) } else { null }
+                        it.display = if (code.display != null) { StringType(code.display) } else { null }
+                        it.version = if (code.version != null) { StringType(code.version) } else { null }
+                    }
+                })
                 .execute()
                 .block()
             response?.body?.entry?.forEach { entry ->
@@ -117,20 +123,18 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
             && contextValue is StringType
             && dataType != null
             && codes != null) {
-            val codings = mutableListOf<Coding>()
-            codes.forEach { code ->
-                codings.add(Coding().also {
-                    it.code = if (code.code != null) { CodeType(code.code) } else { null }
-                    it.system = if (code.system != null) { UriType(code.system) } else { null }
-                    it.display = if (code.display != null) { StringType(code.display) } else { null }
-                    it.version = if (code.version != null) { StringType(code.version) } else { null }
-                })
-            }
             val response = fhirClient
                 .search()
                 .withResourceType(dataType)
                 .withSubject(contextValue.value)
-                .withCodes(codings)
+                .withCodes(codes.map { code ->
+                    Coding().also {
+                        it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                        it.system = if (code.system != null) { UriType(code.system) } else { null }
+                        it.display = if (code.display != null) { StringType(code.display) } else { null }
+                        it.version = if (code.version != null) { StringType(code.version) } else { null }
+                    }
+                })
                 .execute()
                 .block()
             response?.body?.entry?.forEach { entry ->
@@ -160,20 +164,18 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
             && codes == null
             && valueSet != null
             && isExpandValueSets) {
-            val codings = mutableListOf<Coding>()
-            terminologyProvider.expand(ValueSetInfo().withId(valueSet)).forEach { code ->
-                codings.add(Coding().also {
-                    it.code = if (code.code != null) { CodeType(code.code) } else { null }
-                    it.system = if (code.system != null) { UriType(code.system) } else { null }
-                    it.display = if (code.display != null) { StringType(code.display) } else { null }
-                    it.version = if (code.version != null) { StringType(code.version) } else { null }
-                })
-            }
             val response = fhirClient
                 .search()
                 .withResourceType(dataType)
                 .withSubject(contextValue.value)
-                .withCodes(codings)
+                .withCodes(terminologyProvider.expand(ValueSetInfo().withId(valueSet)).map { code ->
+                    Coding().also {
+                        it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                        it.system = if (code.system != null) { UriType(code.system) } else { null }
+                        it.display = if (code.display != null) { StringType(code.display) } else { null }
+                        it.version = if (code.version != null) { StringType(code.version) } else { null }
+                    }
+                })
                 .execute()
                 .block()
             response?.body?.entry?.forEach { entry ->
