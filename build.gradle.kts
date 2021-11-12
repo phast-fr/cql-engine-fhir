@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "fr.phast"
-version = "0.0.4-SNAPSHOT"
+version = "0.0.9-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -25,11 +25,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("org.springframework.boot:spring-boot-starter-webflux:2.5.5")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:2.5.6")
 
     implementation("org.opencds.cqf.cql:engine:1.5.2")
 
-    implementation("fr.phast:phast-fhir-kt:0.0.3-SNAPSHOT")
+    implementation("fr.phast:phast-fhir-kt:0.0.10-SNAPSHOT")
 }
 
 tasks.withType<KotlinCompile> {

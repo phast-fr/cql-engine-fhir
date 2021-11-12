@@ -63,6 +63,8 @@ class R4FhirModelResolver: ModelResolver {
                     "extension" -> target.extension
                     "contained" -> target.contained
                     "authoredOn" -> target.authoredOn
+                    "medication" -> target.medicationReferenceTarget
+                    "medication.code" -> target.medicationReferenceTarget
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -93,6 +95,7 @@ class R4FhirModelResolver: ModelResolver {
                             null
                         }
                     }
+                    "code" -> target.code
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -141,6 +144,7 @@ class R4FhirModelResolver: ModelResolver {
                     }
                     "status" -> target.status
                     "interpretation" -> target.interpretation
+                    "code" -> target.code
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
