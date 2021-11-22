@@ -99,7 +99,7 @@ class R4FhirTerminologyProvider(uri: String): TerminologyProvider {
         return codes
     }
 
-    override fun lookup(code: Code?, codeSystem: CodeSystemInfo?): Code {
+    override fun lookup(code: Code?, codeSystem: CodeSystemInfo?): Code? {
         TODO("Not yet implemented")
     }
 
