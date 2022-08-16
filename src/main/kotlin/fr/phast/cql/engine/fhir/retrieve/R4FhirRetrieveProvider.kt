@@ -83,7 +83,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         }
         else if (contextPath == "subject"
             && contextValue is StringType
-            && dataType == "MedicationRequest"
+            && (dataType == "MedicationRequest" || dataType == "MedicationStatement")
             && codePath == "medication.code"
             && codes != null) {
             val response = fhirClient

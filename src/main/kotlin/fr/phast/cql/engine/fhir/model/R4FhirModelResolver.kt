@@ -51,7 +51,10 @@ class R4FhirModelResolver: ModelResolver {
         when (target) {
             is Patient -> {
                 return when (path) {
-                    "birthDate.value" -> Date(target.birthDate?.value)
+                    "gender" -> target.gender
+                    "active" -> target.active
+                    "birthDate" -> target.birthDate
+                    "deceased" -> target.deceasedBoolean
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -65,6 +68,19 @@ class R4FhirModelResolver: ModelResolver {
                     "authoredOn" -> target.authoredOn
                     "medication" -> target.medicationReferenceTarget
                     "medication.code" -> target.medicationReferenceTarget
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is MedicationStatement -> {
+                return when (path) {
+                    "extension" -> target.extension
+                    "contained" -> target.contained
+                    "medication" -> target.medicationReferenceTarget
+                    "medication.code" -> target.medicationReferenceTarget
+                    "dosage" -> target.dosage
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -96,6 +112,7 @@ class R4FhirModelResolver: ModelResolver {
                         }
                     }
                     "code" -> target.code
+                    "severity" -> target.severity
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -145,6 +162,17 @@ class R4FhirModelResolver: ModelResolver {
                     "status" -> target.status
                     "interpretation" -> target.interpretation
                     "code" -> target.code
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is DiagnosticReport -> {
+                return when (path) {
+                    "code" -> target.code
+                    "status" -> target.status
+                    "conclusionCode" -> target.conclusionCode
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -248,6 +276,15 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
+            is BooleanType -> {
+                return when (path) {
+                    "value" -> target.value
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
             is StringType -> {
                 return when (path) {
                     "value" -> target.value
@@ -260,6 +297,15 @@ class R4FhirModelResolver: ModelResolver {
             is CodeType -> {
                 return when (path) {
                     "value" -> target.value
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is DateType -> {
+                return when (path) {
+                    "value" -> Date(target.value)
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -285,6 +331,24 @@ class R4FhirModelResolver: ModelResolver {
                 }
             }
             is ObservationStatus -> {
+                return when (path) {
+                    "value" -> target.text
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is DiagnosticReportStatus -> {
+                return when (path) {
+                    "value" -> target.text
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is AdministrativeGender -> {
                 return when (path) {
                     "value" -> target.text
                     else -> {
@@ -365,6 +429,8 @@ class R4FhirModelResolver: ModelResolver {
             "TaskPriority" -> "RequestPriority"
             "VisionStatus" -> "FinancialResourceStatusCodes"
             "base64Binary" -> "Base64BinaryType"
+            "boolean" -> "BooleanType"
+            "date" -> "DateType"
             "string" -> "StringType"
             "uri" -> "UriType"
             "xhtml" -> "java.lang.String"

@@ -4,17 +4,19 @@ val ossrhUsername: String by project
 val ossrhPassword: String by project
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.6.21"
+    id("java")
     id("java-library")
     id("maven-publish")
     id("signing")
 }
 
 group = "fr.phast"
-version = "0.0.10-SNAPSHOT"
+version = "0.0.23-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
@@ -25,11 +27,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("org.springframework.boot:spring-boot-starter-webflux:2.6.0")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:2.6.10")
 
-    implementation("org.opencds.cqf.cql:engine:1.5.2")
+    api("org.opencds.cqf.cql:engine:1.5.2")
 
-    implementation("fr.phast:phast-fhir-kt:0.0.10-SNAPSHOT")
+    api("fr.phast:phast-fhir-kt:0.0.10-SNAPSHOT")
 }
 
 tasks.withType<KotlinCompile> {
@@ -70,7 +72,7 @@ publishing {
                 name.set(rootProject.name)
                 packaging = "jar"
                 description.set(project.description)
-                url.set("https://github.com/phast-fr/phast-fhir-kt")
+                url.set("https://github.com/phast-fr/cql-engine-fhir")
                 licenses {
                     license {
                         name.set("MIT License")
@@ -86,9 +88,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:https://github.com/phast-fr/phast-fhir-kt.git")
-                    developerConnection.set("scm:git:https://github.com/phast-fr/phast-fhir-kt.git")
-                    url.set("https://github.com/phast-fr/phast-fhir-kt.git")
+                    connection.set("scm:git:https://github.com/phast-fr/cql-engine-fhir.git")
+                    developerConnection.set("scm:git:https://github.com/phast-fr/cql-engine-fhir.git")
+                    url.set("https://github.com/phast-fr/cql-engine-fhir.git")
                 }
             }
         }
