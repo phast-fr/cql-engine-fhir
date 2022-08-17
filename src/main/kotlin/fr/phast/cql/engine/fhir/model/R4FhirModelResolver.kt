@@ -426,6 +426,7 @@ class R4FhirModelResolver: ModelResolver {
             "ServiceRequestIntent" -> "RequestIntent"
             "ServiceRequestPriority" -> "RequestPriority"
             "ServiceRequestStatus" -> "RequestStatus"
+            "SimpleQuantity" -> "Quantity"
             "TaskPriority" -> "RequestPriority"
             "VisionStatus" -> "FinancialResourceStatusCodes"
             "base64Binary" -> "Base64BinaryType"
