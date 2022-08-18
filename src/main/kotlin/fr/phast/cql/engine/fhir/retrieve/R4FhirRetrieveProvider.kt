@@ -182,6 +182,28 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
                 entry.resource?.let { resources.add(it) }
             }
         }
+        else if (contextPath == "patient"
+            && contextValue is StringType
+            && dataType != null
+            && codes != null) {
+            val response = fhirClient
+                .search()
+                .withResourceType(dataType)
+                .withPatient(contextValue.value)
+                .withCodes(codes.map { code ->
+                    Coding().also {
+                        it.code = if (code.code != null) { CodeType(code.code) } else { null }
+                        it.system = if (code.system != null) { UriType(code.system) } else { null }
+                        it.display = if (code.display != null) { StringType(code.display) } else { null }
+                        it.version = if (code.version != null) { StringType(code.version) } else { null }
+                    }
+                })
+                .execute()
+                .block()
+            response?.body?.entry?.forEach { entry ->
+                entry.resource?.let { resources.add(it) }
+            }
+        }
         else {
             logger.error("case not supported!")
         }

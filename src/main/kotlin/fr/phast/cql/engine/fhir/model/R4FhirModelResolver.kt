@@ -54,6 +54,7 @@ class R4FhirModelResolver: ModelResolver {
                     "gender" -> target.gender
                     "active" -> target.active
                     "birthDate" -> target.birthDate
+                    "birthDate.value" -> if (target.birthDate?.value != null) Date(target.birthDate!!.value) else null
                     "deceased" -> target.deceasedBoolean
                     else -> {
                         logger.error("target: $target, path: $path")
@@ -369,8 +370,8 @@ class R4FhirModelResolver: ModelResolver {
         }
 
         if (!(contextType == "Unspecified" || contextType == "Population")) {
-            if (contextType == "Patient" && targetType == "MedicationStatement") {
-                return "subject"
+            if (contextType == "Patient" && targetType == "AllergyIntolerance") {
+                return "patient"
             }
             else if (contextType == targetType) {
                 return "id"
