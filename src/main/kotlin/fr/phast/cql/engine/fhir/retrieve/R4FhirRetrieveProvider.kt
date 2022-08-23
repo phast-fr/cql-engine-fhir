@@ -83,29 +83,6 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         }
         else if (contextPath == "subject"
             && contextValue is StringType
-            && (dataType == "MedicationRequest" || dataType == "MedicationStatement")
-            && codePath == "medication.code"
-            && codes != null) {
-            val response = fhirClient
-                .search()
-                .withResourceType(dataType)
-                .withSubject(contextValue.value)
-                .withMedicationCode(codes.map { code ->
-                    Coding().also {
-                        it.code = if (code.code != null) { CodeType(code.code) } else { null }
-                        it.system = if (code.system != null) { UriType(code.system) } else { null }
-                        it.display = if (code.display != null) { StringType(code.display) } else { null }
-                        it.version = if (code.version != null) { StringType(code.version) } else { null }
-                    }
-                })
-                .execute()
-                .block()
-            response?.body?.entry?.forEach { entry ->
-                entry.resource?.let { resources.add(it) }
-            }
-        }
-        else if (contextPath == "subject"
-            && contextValue is StringType
             && dataType != null
             && codes == null
             && valueSet == null) {
@@ -122,12 +99,13 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "subject"
             && contextValue is StringType
             && dataType != null
+            && codePath != null
             && codes != null) {
             val response = fhirClient
                 .search()
                 .withResourceType(dataType)
                 .withSubject(contextValue.value)
-                .withCodes(codes.map { code ->
+                .withCodes(codePath, codes.map { code ->
                     Coding().also {
                         it.code = if (code.code != null) { CodeType(code.code) } else { null }
                         it.system = if (code.system != null) { UriType(code.system) } else { null }
@@ -144,6 +122,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "subject"
             && contextValue is StringType
             && dataType != null
+            && codePath != null
             && codes == null
             && valueSet != null
             && !isExpandValueSets) {
@@ -151,7 +130,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
                 .search()
                 .withResourceType(dataType)
                 .withSubject(contextValue.value)
-                .withValueSet(valueSet)
+                .withValueSet(codePath, valueSet)
                 .execute()
                 .block()
             response?.body?.entry?.forEach { entry ->
@@ -161,6 +140,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "subject"
             && contextValue is StringType
             && dataType != null
+            && codePath != null
             && codes == null
             && valueSet != null
             && isExpandValueSets) {
@@ -168,7 +148,7 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
                 .search()
                 .withResourceType(dataType)
                 .withSubject(contextValue.value)
-                .withCodes(terminologyProvider.expand(ValueSetInfo().withId(valueSet)).map { code ->
+                .withCodes(codePath, terminologyProvider.expand(ValueSetInfo().withId(valueSet)).map { code ->
                     Coding().also {
                         it.code = if (code.code != null) { CodeType(code.code) } else { null }
                         it.system = if (code.system != null) { UriType(code.system) } else { null }
@@ -185,12 +165,13 @@ class R4FhirRetrieveProvider(uri: String): TerminologyAwareRetrieveProvider() {
         else if (contextPath == "patient"
             && contextValue is StringType
             && dataType != null
+            && codePath != null
             && codes != null) {
             val response = fhirClient
                 .search()
                 .withResourceType(dataType)
                 .withPatient(contextValue.value)
-                .withCodes(codes.map { code ->
+                .withCodes(codePath, codes.map { code ->
                     Coding().also {
                         it.code = if (code.code != null) { CodeType(code.code) } else { null }
                         it.system = if (code.system != null) { UriType(code.system) } else { null }
