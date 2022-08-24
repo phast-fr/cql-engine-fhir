@@ -28,6 +28,7 @@ import fr.phast.cql.engine.fhir.exception.UnknownTypeException
 import org.opencds.cqf.cql.engine.runtime.Date
 import org.hl7.fhir.r4.model.*
 import org.opencds.cqf.cql.engine.model.ModelResolver
+import org.opencds.cqf.cql.engine.runtime.DateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -79,7 +80,7 @@ class R4FhirModelResolver: ModelResolver {
                 return when (path) {
                     "extension" -> target.extension
                     "contained" -> target.contained
-                    "medication" -> target.medicationReferenceTarget
+                    "code" -> target.medicationCodeableConcept
                     "medication.code" -> target.medicationReferenceTarget
                     "dosage" -> target.dosage
                     else -> {
@@ -183,6 +184,48 @@ class R4FhirModelResolver: ModelResolver {
             is Medication -> {
                 return when (path) {
                     "code" -> target.code
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is AllergyIntolerance -> {
+                return when (path) {
+                    "verificationStatus" -> target.verificationStatus
+                    "clinicalStatus" -> target.clinicalStatus
+                    "code" -> target.code
+                    "reaction" -> target.reaction
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is Procedure -> {
+                return when (path) {
+                    "code" -> target.code
+                    "status" -> target.status
+                    "performed" -> {
+                        if (target.performedAge != null) {
+                            target.performedAge
+                        }
+                        else if (target.performedDateTime != null) {
+                            target.performedDateTime
+                        }
+                        else if (target.performedPeriod != null) {
+                            target.performedPeriod
+                        }
+                        else if (target.performedRange != null) {
+                            target.performedRange
+                        }
+                        else if (target.performedString != null) {
+                            target.performedString
+                        }
+                        else {
+                            null
+                        }
+                    }
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -313,6 +356,15 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
+            is DateTimeType -> {
+                return when (path) {
+                    "value" -> DateTime(target.value, null)
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
             is UriType -> {
                 return when (path) {
                     "value" -> target.value
@@ -352,6 +404,40 @@ class R4FhirModelResolver: ModelResolver {
             is AdministrativeGender -> {
                 return when (path) {
                     "value" -> target.text
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is AllergyIntoleranceReaction -> {
+                return when (path) {
+                    "onset" -> target.onset
+                    "substance" -> target.substance
+                    "severity" -> target.severity
+                    "manifestation" -> target.manifestation
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is AllergyIntoleranceSeverity -> {
+                return when (path) {
+                    "name" -> target.name
+                    "text" -> target.text
+                    "ordinal" -> target.ordinal
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is EventStatus -> {
+                return when (path) {
+                    "name" -> target.name
+                    "text" -> target.text
+                    "ordinal" -> target.ordinal
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
