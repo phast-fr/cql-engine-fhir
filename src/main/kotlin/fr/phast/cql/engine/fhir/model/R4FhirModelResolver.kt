@@ -393,6 +393,18 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
+            is AllergyIntoleranceReaction -> {
+                return when (path) {
+                    "onset" -> target.onset
+                    "substance" -> target.substance
+                    "severity" -> target.severity
+                    "manifestation" -> target.manifestation
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
             is ObservationStatus -> {
                 return when (path) {
                     "value" -> target.text
@@ -420,23 +432,9 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
-            is AllergyIntoleranceReaction -> {
-                return when (path) {
-                    "onset" -> target.onset
-                    "substance" -> target.substance
-                    "severity" -> target.severity
-                    "manifestation" -> target.manifestation
-                    else -> {
-                        logger.error("target: $target, path: $path")
-                        null
-                    }
-                }
-            }
             is AllergyIntoleranceSeverity -> {
                 return when (path) {
-                    "name" -> target.name
-                    "text" -> target.text
-                    "ordinal" -> target.ordinal
+                    "value" -> target.text
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -445,9 +443,7 @@ class R4FhirModelResolver: ModelResolver {
             }
             is EventStatus -> {
                 return when (path) {
-                    "name" -> target.name
-                    "text" -> target.text
-                    "ordinal" -> target.ordinal
+                    "value" -> target.text
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -456,9 +452,7 @@ class R4FhirModelResolver: ModelResolver {
             }
             is EncounterStatus -> {
                 return when (path) {
-                    "name" -> target.name
-                    "text" -> target.text
-                    "ordinal" -> target.ordinal
+                    "value" -> target.text
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
