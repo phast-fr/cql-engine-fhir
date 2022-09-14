@@ -232,6 +232,16 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
+            is Encounter -> {
+                return when (path) {
+                    "class" -> target.`class`
+                    "status" -> target.status
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
             is Extension -> {
                 return when (path)  {
                     "url" -> target.url
@@ -434,6 +444,17 @@ class R4FhirModelResolver: ModelResolver {
                 }
             }
             is EventStatus -> {
+                return when (path) {
+                    "name" -> target.name
+                    "text" -> target.text
+                    "ordinal" -> target.ordinal
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is EncounterStatus -> {
                 return when (path) {
                     "name" -> target.name
                     "text" -> target.text
