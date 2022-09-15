@@ -236,6 +236,12 @@ class R4FhirModelResolver: ModelResolver {
                 return when (path) {
                     "class" -> target.`class`
                     "status" -> target.status
+                    "type" -> target.type
+                    "serviceType" -> target.serviceType
+                    "priority" -> target.priority
+                    "period" -> target.period
+                    "length" -> target.length
+                    "reasonCode" -> target.reasonCode
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -324,6 +330,16 @@ class R4FhirModelResolver: ModelResolver {
                     "system" -> target.system
                     "unit" -> target.unit
                     "code" -> target.code
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is Period -> {
+                return when (path) {
+                    "start" -> target.start
+                    "end" -> target.end
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
