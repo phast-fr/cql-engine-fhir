@@ -80,6 +80,17 @@ class R4FhirModelResolver: ModelResolver {
                 return when (path) {
                     "extension" -> target.extension
                     "contained" -> target.contained
+                    "effective" -> {
+                        return if (target.effectivePeriod != null) {
+                            target.effectivePeriod
+                        }
+                        else if (target.effectiveDateTime != null) {
+                            target.effectiveDateTime
+                        }
+                        else {
+                            null
+                        }
+                    }
                     "code" -> target.medicationCodeableConcept
                     "medication.code" -> target.medicationReferenceTarget
                     "dosage" -> target.dosage
@@ -391,6 +402,15 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
+            is InstantType -> {
+                return when (path) {
+                    "value" -> InstantType(target.value)
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
             is UriType -> {
                 return when (path) {
                     "value" -> target.value
@@ -550,6 +570,8 @@ class R4FhirModelResolver: ModelResolver {
             "base64Binary" -> "Base64BinaryType"
             "boolean" -> "BooleanType"
             "date" -> "DateType"
+            "dateTime" -> "DateTimeType"
+            "instant" -> "InstantType"
             "string" -> "StringType"
             "uri" -> "UriType"
             "xhtml" -> "java.lang.String"
