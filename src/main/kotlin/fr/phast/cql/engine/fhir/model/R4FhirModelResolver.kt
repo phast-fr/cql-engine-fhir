@@ -68,8 +68,10 @@ class R4FhirModelResolver: ModelResolver {
                     "extension" -> target.extension
                     "contained" -> target.contained
                     "authoredOn" -> target.authoredOn
+                    "code" -> target.medicationCodeableConcept
                     "medication" -> target.medicationReferenceTarget
                     "medication.code" -> target.medicationReferenceTarget
+                    "status" -> target.status
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -94,6 +96,7 @@ class R4FhirModelResolver: ModelResolver {
                     "code" -> target.medicationCodeableConcept
                     "medication.code" -> target.medicationReferenceTarget
                     "dosage" -> target.dosage
+                    "status" -> target.status
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -175,6 +178,24 @@ class R4FhirModelResolver: ModelResolver {
                     "status" -> target.status
                     "interpretation" -> target.interpretation
                     "code" -> target.code
+                    "effective" -> {
+                        if (target.effectivePeriod != null) {
+                            target.effectivePeriod
+                        }
+                        else if (target.effectiveDateTime != null) {
+                            target.effectiveDateTime
+                        }
+                        else if (target.effectiveInstant != null) {
+                            target.effectiveInstant
+                        }
+                        else if (target.effectiveTiming != null) {
+                            target.effectiveTiming
+                        }
+                        else {
+                            null
+                        }
+                    }
+                    "issued" -> target.issued
                     else -> {
                         logger.error("target: $target, path: $path")
                         null
@@ -441,6 +462,24 @@ class R4FhirModelResolver: ModelResolver {
                     }
                 }
             }
+            is MedicationRequestStatus -> {
+                return when (path) {
+                    "value" -> target.text
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
+            is MedicationStatusCodes -> {
+                return when (path) {
+                    "value" -> target.text
+                    else -> {
+                        logger.error("target: $target, path: $path")
+                        null
+                    }
+                }
+            }
             is ObservationStatus -> {
                 return when (path) {
                     "value" -> target.text
@@ -613,6 +652,19 @@ class R4FhirModelResolver: ModelResolver {
                 return when (type.name) {
                     "org.hl7.fhir.r4.model.Coding" -> {
                         value.coding?.get(0)
+                    }
+                    else -> {
+                        logger.error("value: $value, type: $type, isStrict: $isStrict")
+                        null
+                    }
+                }
+            }
+            is DateTimeType -> {
+                return when (type.name) {
+                    "org.hl7.fhir.r4.model.InstantType" -> InstantType(value.value)
+                    "org.hl7.fhir.r4.model.Period" -> Period().apply {
+                        start = value
+                        end = value
                     }
                     else -> {
                         logger.error("value: $value, type: $type, isStrict: $isStrict")
